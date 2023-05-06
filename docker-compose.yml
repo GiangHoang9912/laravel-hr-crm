@@ -1,0 +1,57 @@
+version: '3'
+
+networks:
+  network:
+    driver: bridge
+
+services:
+  mysql-sales:
+    image: mysql
+    container_name: mysql-sales
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --mysqlx=0
+    environment:
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306 # cannot change this port to other number
+      - MYSQL_DATABASE=salse-dev # name you want for the database
+      - MYSQL_USER=user # change to whatever username you want
+      - MYSQL_PASSWORD=root #change to the password you want for user
+      - MYSQL_ROOT_PASSWORD=root #change to good root password
+    ports:
+      - "3307:3306"
+    networks:
+      - network
+    volumes:
+      - "../dbmysql-sales:/var/lib/mysql"
+      - "./mysql/mysql-init:/docker-entrypoint-initdb.d"
+  redis:
+    container_name: redis
+    restart: "unless-stopped"
+    hostname: redis
+    image: redis:latest
+    command: redis-server --requirepass "redispw"
+    ports:
+      - "6379:6379"
+    expose:
+      - 6379
+    environment:
+      - HOSTNAME=redis
+    networks:
+      - network
+    logging:
+      driver: "json-file"
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+        max-size: "50m"
+    volumes:
+      - ./Services_Data/redis_data:/data
+    deploy:
+      resources:
+        limits:
+          memory: "256m"
+
+volumes:
+  db-config:
+  db-data:
+
+
