@@ -1,0 +1,17 @@
+{
+    "apps": [
+      {
+        "name": "media_portable",
+        "cwd": "/home/ubuntu/media_portable_be",
+        "script": "node dist",
+        "env": {
+          "POSTGRE_URI": "postgres://media_portable__postgres:media_portable__postgres123a@localhost:5432/media_portable__postgres?schema=public",
+          "TOR_URI": "localhost:9050",
+          "TWITTER_URI": "https://twitter.com",
+          "QUESTION_ANSWERING_URI": "http://localhost:5002",
+          "PORT": "8080"
+        },
+        "ignore_watch": ["node_modules", "logs"]
+      }
+    ]
+  }
